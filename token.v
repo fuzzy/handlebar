@@ -1,6 +1,6 @@
 module handlebar
 
-enum TokenKind as u8 {
+pub enum TokenKind as u8 {
 	t_ident   // Alphanumeric or _ (e.g. Foo123)
 	t_string  // "literal string"
 	t_number  // all treated as f65
@@ -18,6 +18,7 @@ enum TokenKind as u8 {
 }
 
 pub struct Token {
+pub:
 	kind   TokenKind
 	lexeme string
 }
