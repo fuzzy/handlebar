@@ -10,7 +10,9 @@ pub fn new_lexer(input string) &Lexer {
 		ilen:  input.len
 		pos:   0
 	}
-	l.read_char()
+	// if l.input.len > 1 {
+	// 	l.read_char()
+	// }
 	return l
 }
 
@@ -19,47 +21,45 @@ fn (mut l Lexer) read_char() rune {
 }
 
 fn (mut l Lexer) get_number() string {
-	start := l.pos - 1
+	start := l.pos
 	for l.pos < l.input.len && (l.input[l.pos].is_digit() || l.input[l.pos] == `.`) {
 		l.read_char()
-		l.pos += 1
 	}
 	return l.input[start..l.pos]
 }
 
 fn (mut l Lexer) get_string() string {
+	l.read_char() // Skip the opening quote
 	start := l.pos
-	for l.pos < l.input.len && l.input[l.pos] != `"` && l.input[l.pos] != 0 {
+	for l.pos < l.input.len && l.input[l.pos] != `"` {
 		l.read_char()
 	}
-	println('THIS IS A BUG: ${l.input} ${start} ${l.pos} ${l.input[start..l.pos]}')
-	if l.pos <= l.input.len && l.input[l.pos] == `"` {
-		l.read_char() // skip the closing quote
-		value := l.input[start..l.pos]
-		return value
-	}
-	return 'Unterminated string starting at position ${start}'
+	value := l.input[start..l.pos]
+	return value
 }
 
 fn (mut l Lexer) get_identifier() string {
-	start := l.pos - 1
-	l.read_char() // advance past first char
-	for l.pos < l.input.len && (l.input[l.pos].is_alnum() || l.input[l.pos] == `_`) {
+	start := l.pos
+	for l.pos < l.input.len && (l.input[l.pos].is_alnum() || l.input[l.pos] == `_`)
+		&& l.input[l.pos] != 0 {
 		l.read_char()
 	}
 	return l.input[start..l.pos]
 }
 
+fn (mut l Lexer) get_operator() string {
+	return l.input[l.pos..l.pos + 1]
+}
+
 pub fn (mut l Lexer) next_token() Token {
 	mut tok := Token{}
 
-	if l.pos >= l.input.len && l.input.len > 1 {
-		println(l)
+	if l.input.len > 1 && l.pos >= l.input.len && l.input[l.pos] == 0 {
 		return new_token(TokenKind.t_eof, '')
 	}
 
 	match rune(l.input[l.pos]) {
-		`0`...`9` {
+		`0`...`9`, `.` {
 			tok = new_token(TokenKind.t_number, l.get_number())
 		}
 		`"` {
@@ -69,13 +69,13 @@ pub fn (mut l Lexer) next_token() Token {
 			tok = new_token(TokenKind.t_ident, l.get_identifier())
 		}
 		`+`, `-`, `*`, `/`, `%` {
-			tok = new_token(TokenKind.t_oper, l.input[l.pos].str())
+			tok = new_token(TokenKind.t_oper, l.get_operator())
 		}
 		`(` {
-			tok = new_token(TokenKind.t_lparen, l.input[l.pos - 1].str())
+			tok = new_token(TokenKind.t_lparen, '(')
 		}
 		`)` {
-			tok = new_token(TokenKind.t_rparen, l.input[l.pos - 1].str())
+			tok = new_token(TokenKind.t_rparen, ')')
 		}
 		else {
 			tok = new_token(TokenKind.t_eof, '')
