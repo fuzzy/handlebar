@@ -1,4 +1,4 @@
-module handlebar
+module blob
 
 import regex
 
@@ -15,13 +15,13 @@ pub fn (b &Blob) str() string {
 	return b.trim()
 }
 
-fn get_blobs(input string) []&Blob {
+pub fn get_blobs(input string) []&Blob {
 	mut retv := []&Blob{}
 	mut re := regex.regex_opt(r'(\{\{.*\}\})') or { panic('Failed to compile regex: ${err}') }
 	for elem in re.find_all_str(input) {
-		mut blob := &Blob{}
-		blob.val = elem
-		retv << blob
+		mut b := &Blob{}
+		b.val = elem
+		retv << b
 	}
 	return retv
 }
