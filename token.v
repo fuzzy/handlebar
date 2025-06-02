@@ -34,7 +34,7 @@ pub fn (t Token) is_comparator() bool {
 }
 
 pub fn (t Token) is_assignor() bool {
-	return t.kind == .t_assign && t.lexeme in ['=', '+=', '-=', '*=', '/=']
+	return t.kind == .t_assign && t.lexeme == '='
 }
 
 pub fn new_token(kind TokenKind, lexeme string) Token {

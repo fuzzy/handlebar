@@ -77,6 +77,10 @@ pub fn (mut l Lexer) next_token() token.Token {
 			}
 			l.next()
 		}
+		`=` {
+			tok = token.new_token(token.TokenKind.t_assign, rune(l.input[l.pos]).str())
+			l.next()
+		}
 		`)` {
 			tok = token.new_token(token.TokenKind.t_rparen, rune(l.input[l.pos]).str())
 			l.next()

@@ -75,12 +75,9 @@ fn test_parse_division_expr() {
 
 fn test_parse_remainder_expr() {
 	mut p := new_parser(tokenize_expr('{{7%2.23}}')!)
-	// println('## DEBUG: ${p}')
 	node := p.parse()!
-	// println('#### DEBUG: ${node}')
 	assert node is BinaryNode
 	bin := node as BinaryNode
-	// println('###### DEBUG: ${bin}')
 	assert bin.left is IntNode
 	assert (bin.left as IntNode).value == 7
 	assert bin.op.symbol == '%'
@@ -88,31 +85,30 @@ fn test_parse_remainder_expr() {
 	assert (bin.right as FloatNode).value == 2.23
 }
 
-// fn test_parse_func_call() {
-// 	mut p := new_parser(tokenize_expr('{{(printf "format" ident)}}')!)
-// 	// println('## DEBUG: ${p}')
-// 	node := p.parse()!
-// 	// println('#### DEBUG: ${node}')
-// 	assert node is BinaryNode
-// 	bin := node as BinaryNode
-// 	// println('###### DEBUG: ${bin}')
-// 	assert bin.left is IntNode
-// 	assert (bin.left as IntNode).value == 7
-// 	assert bin.op.symbol == '%'
-// 	assert bin.right is FloatNode
-// 	assert (bin.right as FloatNode).value == 2.23
-// }
+fn test_parse_assign() {
+	mut p := new_parser(tokenize_expr('{{varname = 2.23}}')!)
+	node := p.parse()!
+	assert node is AssignNode
+	assign := node as AssignNode
+	assert assign.left.name == 'varname'
+	assert assign.right is FloatNode
+	assert (assign.right as FloatNode).value == 2.23
+}
+
+fn test_parse_ident() {
+	mut p := new_parser(tokenize_expr('{{myVar}}')!)
+	node := p.parse()!
+	assert node is IdentNode
+	ident := node as IdentNode
+	assert ident.name == 'myVar'
+}
 
 fn test_parse_nested_expr() {
 	mut p := new_parser(tokenize_expr('{{(1 * 234) + (56 + 78)}}')!)
 	node := p.parse()!
 	assert node is BinaryNode
-
-	// Top-level BinaryNode: (1 * 234) + (56 + 78)
 	bin := node as BinaryNode
 	assert bin.op.symbol == '+'
-
-	// Left side: (1 * 234)
 	assert bin.left is BinaryNode
 	left_bin := bin.left as BinaryNode
 	assert left_bin.op.symbol == '*'
@@ -120,8 +116,6 @@ fn test_parse_nested_expr() {
 	assert (left_bin.left as IntNode).value == 1
 	assert left_bin.right is IntNode
 	assert (left_bin.right as IntNode).value == 234
-
-	// Right side: (56 + 78)
 	assert bin.right is BinaryNode
 	right_bin := bin.right as BinaryNode
 	assert right_bin.op.symbol == '+'
@@ -135,21 +129,13 @@ fn test_parse_deep_nested_expr_precise() {
 	mut p := new_parser(tokenize_expr('{{((1*24)+(56+78))*5}}')!)
 	node := p.parse()!
 	assert node is BinaryNode
-
-	// Top-level BinaryNode: (((1 * 24) + (56 + 78)) * 5)
 	root := node as BinaryNode
 	assert root.op.symbol == '*'
-
-	// Right side: 5
 	assert root.right is IntNode
 	assert (root.right as IntNode).value == 5
-
-	// Left side: (1 * 24) + (56 + 78)
 	assert root.left is BinaryNode
 	add1 := root.left as BinaryNode
 	assert add1.op.symbol == '+'
-
-	// Left of +: (1 * 24)
 	assert add1.left is BinaryNode
 	mult := add1.left as BinaryNode
 	assert mult.op.symbol == '*'
@@ -157,8 +143,6 @@ fn test_parse_deep_nested_expr_precise() {
 	assert (mult.left as IntNode).value == 1
 	assert mult.right is IntNode
 	assert (mult.right as IntNode).value == 24
-
-	// Right of +: (56 + 78)
 	assert add1.right is BinaryNode
 	add2 := add1.right as BinaryNode
 	assert add2.op.symbol == '+'
