@@ -1,6 +1,6 @@
 VCC = v
-# VFLAGS = -skip-unused -shared -stats -color -W -N -prod
-VFLAGS = -skip-unused -shared -stats -color -W -N -debug 
+VFLAGS = -skip-unused -shared -stats -color -W -N -prod
+# VFLAGS = -skip-unused -shared -stats -color -W -N -debug
 TARGET = handlebar.so
 
 all: build
