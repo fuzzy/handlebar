@@ -36,6 +36,7 @@ fn (mut l Lexer) get_string() string {
 		l.read_char()
 	}
 	value := l.input[start..l.pos]
+	l.read_char() // Skip the closing quote
 	return value
 }
 

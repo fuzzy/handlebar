@@ -151,3 +151,67 @@ fn test_parse_deep_nested_expr_precise() {
 	assert add2.right is IntNode
 	assert (add2.right as IntNode).value == 78
 }
+
+fn test_parse_call_simple() {
+	mut p := new_parser(tokenize_expr('{{Color "red" "text"}}')!)
+	node := p.parse()!
+	assert node is CallNode
+	call := node as CallNode
+	assert call.fn_name == 'Color'
+	assert call.args.len == 2
+	assert call.args[0] is StringNode
+	assert (call.args[0] as StringNode).value == 'red'
+	assert call.args[1] is StringNode
+	assert (call.args[1] as StringNode).value == 'text'
+}
+
+fn test_parse_call_simple_alt_syntax() {
+	mut p2 := new_parser(tokenize_expr('{{(Color "red" "text")}}')!)
+	node2 := p2.parse()!
+	assert node2 is CallNode
+	call2 := node2 as CallNode
+	assert call2.fn_name == 'Color'
+	assert call2.args.len == 2
+	assert call2.args[0] is StringNode
+	assert (call2.args[0] as StringNode).value == 'red'
+	assert call2.args[1] is StringNode
+	assert (call2.args[1] as StringNode).value == 'text'
+}
+
+fn test_parse_call_nested() {
+	mut p := new_parser(tokenize_expr('{{Color "red" (printf "fmt %d" varName)}}')!)
+	node := p.parse()!
+	assert node is CallNode
+	call := node as CallNode
+	assert call.fn_name == 'Color'
+	assert call.args.len == 2
+	assert call.args[0] is StringNode
+	assert (call.args[0] as StringNode).value == 'red'
+	assert call.args[1] is CallNode
+	nested := call.args[1] as CallNode
+	assert nested.fn_name == 'printf'
+	assert nested.args.len == 2
+	assert nested.args[0] is StringNode
+	assert (nested.args[0] as StringNode).value == 'fmt %d'
+	assert nested.args[1] is IdentNode
+	assert (nested.args[1] as IdentNode).name == 'varName'
+}
+
+fn test_parse_call_nested_alt_syntax() {
+	mut p := new_parser(tokenize_expr('{{(Color "red" (printf "fmt %d" varName))}}')!)
+	node := p.parse()!
+	assert node is CallNode
+	call := node as CallNode
+	assert call.fn_name == 'Color'
+	assert call.args.len == 2
+	assert call.args[0] is StringNode
+	assert (call.args[0] as StringNode).value == 'red'
+	assert call.args[1] is CallNode
+	nested := call.args[1] as CallNode
+	assert nested.fn_name == 'printf'
+	assert nested.args.len == 2
+	assert nested.args[0] is StringNode
+	assert (nested.args[0] as StringNode).value == 'fmt %d'
+	assert nested.args[1] is IdentNode
+	assert (nested.args[1] as IdentNode).name == 'varName'
+}
