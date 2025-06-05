@@ -119,3 +119,75 @@ fn printf(args ...parser.AstNode) string {
 		return strconv.v_sprintf(fmt_node, ...v_args)
 	}
 }
+
+fn upper(args ...parser.AstNode) string {
+	assert args.len == 1
+	node := args[0]
+	match node {
+		parser.StringNode {
+			return (args[0] as parser.StringNode).str().to_upper()
+		}
+		else {
+			panic('upper: expected a StringNode, got: ${args}[0]')
+		}
+	}
+}
+
+fn lower(args ...parser.AstNode) string {
+	assert args.len == 1
+	node := args[0]
+	match node {
+		parser.StringNode {
+			return (args[0] as parser.StringNode).str().to_lower()
+		}
+		else {
+			panic('lower: expected a StringNode, got: ${args}[0]')
+		}
+	}
+}
+
+fn split(args ...parser.AstNode) string {
+	// args[0]: original string
+	// args[1]: delimiter (substring)
+	// args[2]: index (IntNode)
+	assert args.len == 3
+	mut s := ''
+	node_a := args[0]
+	match node_a {
+		parser.StringNode {
+			s = (args[0] as parser.StringNode).str()
+		}
+		else {
+			panic('split: first argument must be a StringNode, got: ${args}[0]')
+		}
+	}
+
+	mut delim := ''
+	node_b := args[1]
+	match node_b {
+		parser.StringNode {
+			delim = (args[1] as parser.StringNode).str()
+		}
+		else {
+			panic('split: second argument must be a StringNode (delimiter), got: ${args}[1]')
+		}
+	}
+
+	mut idx := 0
+	node_c := args[2]
+	match node_c {
+		parser.IntNode {
+			idx = (args[2] as parser.IntNode).val()
+		}
+		else {
+			panic('split: third argument must be an IntNode (index), got: ${args}[2]')
+		}
+	}
+
+	parts := s.split(delim)
+	if idx < 0 || idx >= parts.len {
+		panic('split: index ${idx} out of range (0..${parts.len - 1})')
+	}
+
+	return parts[idx]
+}

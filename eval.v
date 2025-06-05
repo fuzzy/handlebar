@@ -34,6 +34,9 @@ pub fn new_evaluator() Evaluator {
 				'rem':    rem
 				'pow':    pow
 				'printf': printf
+				'lower':  lower
+				'upper':  upper
+				'split':  split
 			}
 		}
 	}

@@ -35,3 +35,18 @@ fn test_printf_func() {
 	assert ev.evaluate_string('{{printf "%.02f" 1.1}}')! == '1.10'
 	assert ev.evaluate_string('{{printf "%02d" 1}}')! == '01'
 }
+
+fn test_lower_func() {
+	mut ev := new_evaluator()
+	assert ev.evaluate_string('{{lower "TEST"}}')! == 'test'
+}
+
+fn test_upper_func() {
+	mut ev := new_evaluator()
+	assert ev.evaluate_string('{{upper "test"}}')! == 'TEST'
+}
+
+fn test_split_func() {
+	mut ev := new_evaluator()
+	assert ev.evaluate_string('{{split "123,test,foo" "," 1}}')! == 'test'
+}
