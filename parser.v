@@ -5,40 +5,69 @@ import token
 import token_stream
 
 // Define AST node types
-interface AstNode {}
+pub interface AstNode {}
 
-struct IntNode {
+pub struct IntNode {
 	value int
 }
 
-struct FloatNode {
+pub fn (i IntNode) val() int {
+	return i.value
+}
+
+pub fn (i IntNode) str() string {
+	return '${i.value}'
+}
+
+pub struct FloatNode {
 	value f64
 }
 
-struct StringNode {
+pub fn (i FloatNode) val() f64 {
+	return i.value
+}
+
+pub fn (i FloatNode) str() string {
+	return '${i.value}'
+}
+
+pub struct StringNode {
 	value string
 }
 
-struct OperNode {
+pub fn (i StringNode) str() string {
+	return '${i.value}'
+}
+
+pub struct OperNode {
 	symbol string
 }
 
-struct BinaryNode {
+pub fn (i OperNode) str() string {
+	return '${i.symbol}'
+}
+
+pub struct BinaryNode {
 	left  AstNode
 	op    OperNode
 	right AstNode
 }
 
-struct IdentNode {
+pub struct IdentNode {
 	name string
 }
 
-struct AssignNode {
+pub fn (i IdentNode) str() string {
+	return '${i.name}'
+}
+
+pub struct AssignNode {
 	left  IdentNode
 	right AstNode
 }
 
-struct CallNode {
+pub struct CallNode {
+pub:
 	fn_name string
 	args    []AstNode
 }

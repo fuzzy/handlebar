@@ -10,6 +10,17 @@ pub mut:
 	pos    int
 }
 
+pub fn (mut s TokenStream) str() string {
+	mut retv := ''
+	for tok in s.tokens {
+		if retv.len > 0 {
+			retv += ' '
+		}
+		retv += tok.lexeme
+	}
+	return retv
+}
+
 pub fn (mut s TokenStream) current() token.Token {
 	return if s.pos < s.tokens.len {
 		s.tokens[s.pos]
