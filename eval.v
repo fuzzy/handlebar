@@ -52,6 +52,16 @@ pub fn (mut ev Evaluator) add_func(k string, p fn (args ...parser.AstNode) strin
 	ev.maps.func[k] = p
 }
 
+fn (mut ev Evaluator) evaluate_call_node(node parser.AstNode) !parser.AstNode {
+	match node {
+		parser.CallNode {}
+		else {
+			return error('Unsupported node type: ${node}')
+		}
+	}
+	return error('Unsupported node type: ${node}')
+}
+
 pub fn (mut ev Evaluator) evaluate_string(input string) !string {
 	ev.input = input
 	ev.output = input

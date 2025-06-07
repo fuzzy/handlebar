@@ -84,6 +84,7 @@ fn pow(args ...parser.AstNode) string {
 // string bits
 
 fn printf(args ...parser.AstNode) string {
+	println('####### DEBUG: ${args}')
 	unsafe {
 		assert args.len >= 1
 		mut fmt_node := (args[0] as parser.StringNode).str()
@@ -94,6 +95,7 @@ fn printf(args ...parser.AstNode) string {
 
 		for i in 1 .. args.len {
 			node := args[i]
+			println('INTERNAL DEBUG: ${node}')
 			match node {
 				parser.IntNode {
 					iv := (args[i] as parser.IntNode).val()
