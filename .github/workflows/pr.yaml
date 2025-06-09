@@ -19,7 +19,7 @@ jobs:
 
       # 2. Install V (via the community setup action)
       - name: Set up V
-        uses: vlang/setup-v@v1
+        uses: vlang/setup-v@v1.4
         with:
           version: 'latest'
 
