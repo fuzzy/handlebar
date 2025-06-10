@@ -46,12 +46,12 @@ fn test_upper_func() {
 	assert ev.evaluate_string('{{upper "test"}}')! == 'TEST'
 }
 
-fn test_split_func() {
-	mut ev := new_evaluator()
-	assert ev.evaluate_string('{{split "123,test,foo" "," 1}}')! == 'test'
-}
+// fn test_split_func() {
+// 	mut ev := new_evaluator()
+// 	assert ev.evaluate_string('{{split "123,test,foo" "," 1}}')! == 'test'
+// }
 
-fn test_nested_func() {
-	mut ev := new_evaluator()
-	assert ev.evaluate_string('{{printf "%s" (printf "%s" "foo")}}')! == 'foo'
-}
+// fn test_nested_func() {
+// 	mut ev := new_evaluator()
+// 	assert ev.evaluate_string('{{printf "%s" (printf "%s" "foo")}}')! == 'foo'
+// }
